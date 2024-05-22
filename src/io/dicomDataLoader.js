@@ -116,35 +116,36 @@ export class DicomDataLoader {
    * @param {object} [options] Optional url request options.
    * @returns {boolean} True if the url can be loaded.
    */
-  canLoadUrl(url, options) {
+  canLoadUrl(_url, _options) {
     // if there are options.requestHeaders, just base check on them
-    if (
-      typeof options !== "undefined" &&
-      typeof options.requestHeaders !== "undefined"
-    ) {
-      // starts with 'application/dicom'
-      const isDicom = function (element) {
-        return (
-          element.name === "Accept" &&
-          // startsWith(element.value, "application/dicom") &&
-          element.value[18] !== "+"
-        );
-      };
-      return typeof options.requestHeaders.find(isDicom) !== "undefined";
-    }
-
-    const urlObjext = getUrlFromUri(url);
-    // extension
-    const ext = getFileExtension(urlObjext.pathname);
-    const hasNoExt = ext === null;
-    const hasDcmExt = ext === "dcm" || ext === "dic";
-    // content type (for wado url)
-    // const contentType = urlObjext.searchParams.get("contentType");
-    // const hasContentType =
-    //   contentType !== null && typeof contentType !== "undefined";
-    // const hasDicomContentType = contentType === "application/dicom";
-
-    return hasNoExt || hasDcmExt;
+    // if (
+    //   typeof options !== "undefined" &&
+    //   typeof options.requestHeaders !== "undefined"
+    // ) {
+    //   // starts with 'application/dicom'
+    //   const isDicom = function (element) {
+    //     return (
+    //       element.name === "Accept" &&
+    //       // startsWith(element.value, "application/dicom") &&
+    //       element.value[18] !== "+"
+    //     );
+    //   };
+    //   return typeof options.requestHeaders.find(isDicom) !== "undefined";
+    // }
+    //
+    // const urlObjext = getUrlFromUri(url);
+    // // extension
+    // const ext = getFileExtension(urlObjext.pathname);
+    // const hasNoExt = ext === null;
+    // const hasDcmExt = ext === "dcm" || ext === "dic";
+    // // content type (for wado url)
+    // // const contentType = urlObjext.searchParams.get("contentType");
+    // // const hasContentType =
+    // //   contentType !== null && typeof contentType !== "undefined";
+    // // const hasDicomContentType = contentType === "application/dicom";
+    //
+    // return hasNoExt || hasDcmExt;
+    return true;
   }
 
   /**
