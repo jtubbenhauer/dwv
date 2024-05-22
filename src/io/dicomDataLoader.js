@@ -1,14 +1,13 @@
-import {startsWith, getFileExtension} from '../utils/string';
-import {getUrlFromUri} from '../utils/uri';
-import {fileContentTypes} from './filesLoader';
-import {urlContentTypes} from './urlsLoader';
-import {DicomBufferToView} from '../image/dicomBufferToView';
+import { startsWith, getFileExtension } from "../utils/string";
+import { getUrlFromUri } from "../utils/uri";
+import { fileContentTypes } from "./filesLoader";
+import { urlContentTypes } from "./urlsLoader";
+import { DicomBufferToView } from "../image/dicomBufferToView";
 
 /**
  * DICOM data loader.
  */
 export class DicomDataLoader {
-
   /**
    * Loader options.
    *
@@ -101,8 +100,8 @@ export class DicomDataLoader {
    */
   canLoadFile(file) {
     const ext = getFileExtension(file.name);
-    const hasNoExt = (ext === null);
-    const hasDcmExt = (ext === 'dcm');
+    const hasNoExt = ext === null;
+    const hasDcmExt = ext === "dcm" || ext === "dic";
     return hasNoExt || hasDcmExt;
   }
 
@@ -119,29 +118,33 @@ export class DicomDataLoader {
    */
   canLoadUrl(url, options) {
     // if there are options.requestHeaders, just base check on them
-    if (typeof options !== 'undefined' &&
-      typeof options.requestHeaders !== 'undefined') {
+    if (
+      typeof options !== "undefined" &&
+      typeof options.requestHeaders !== "undefined"
+    ) {
       // starts with 'application/dicom'
       const isDicom = function (element) {
-        return element.name === 'Accept' &&
-          startsWith(element.value, 'application/dicom') &&
-          element.value[18] !== '+';
+        return (
+          element.name === "Accept" &&
+          startsWith(element.value, "application/dicom") &&
+          element.value[18] !== "+"
+        );
       };
-      return typeof options.requestHeaders.find(isDicom) !== 'undefined';
+      return typeof options.requestHeaders.find(isDicom) !== "undefined";
     }
 
     const urlObjext = getUrlFromUri(url);
     // extension
     const ext = getFileExtension(urlObjext.pathname);
-    const hasNoExt = (ext === null);
-    const hasDcmExt = (ext === 'dcm');
+    const hasNoExt = ext === null;
+    const hasDcmExt = ext === "dcm" || ext === "dic";
     // content type (for wado url)
-    const contentType = urlObjext.searchParams.get('contentType');
-    const hasContentType = contentType !== null &&
-      typeof contentType !== 'undefined';
-    const hasDicomContentType = (contentType === 'application/dicom');
+    const contentType = urlObjext.searchParams.get("contentType");
+    const hasContentType =
+      contentType !== null && typeof contentType !== "undefined";
+    const hasDicomContentType = contentType === "application/dicom";
 
-    return hasContentType ? hasDicomContentType : (hasNoExt || hasDcmExt);
+    return hasContentType ? hasDicomContentType : hasNoExt || hasDcmExt;
   }
 
   /**
@@ -151,12 +154,14 @@ export class DicomDataLoader {
    * @returns {boolean} True if the object can be loaded.
    */
   canLoadMemory(mem) {
-    if (typeof mem['Content-Type'] !== 'undefined' &&
-      mem['Content-Type'] === 'application/dicom') {
+    if (
+      typeof mem["Content-Type"] !== "undefined" &&
+      mem["Content-Type"] === "application/dicom"
+    ) {
       return true;
     }
-    if (typeof mem.filename !== 'undefined') {
-      return this.canLoadFile({name: mem.filename});
+    if (typeof mem.filename !== "undefined") {
+      return this.canLoadFile({ name: mem.filename });
     }
     return false;
   }
@@ -236,5 +241,4 @@ export class DicomDataLoader {
    * @param {object} _event The abort event.
    */
   onabort(_event) {}
-
 } // class DicomDataLoader
