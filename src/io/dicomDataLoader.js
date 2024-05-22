@@ -126,7 +126,7 @@ export class DicomDataLoader {
       const isDicom = function (element) {
         return (
           element.name === "Accept" &&
-          startsWith(element.value, "application/dicom") &&
+          // startsWith(element.value, "application/dicom") &&
           element.value[18] !== "+"
         );
       };
@@ -139,12 +139,12 @@ export class DicomDataLoader {
     const hasNoExt = ext === null;
     const hasDcmExt = ext === "dcm" || ext === "dic";
     // content type (for wado url)
-    const contentType = urlObjext.searchParams.get("contentType");
-    const hasContentType =
-      contentType !== null && typeof contentType !== "undefined";
-    const hasDicomContentType = contentType === "application/dicom";
+    // const contentType = urlObjext.searchParams.get("contentType");
+    // const hasContentType =
+    //   contentType !== null && typeof contentType !== "undefined";
+    // const hasDicomContentType = contentType === "application/dicom";
 
-    return hasContentType ? hasDicomContentType : hasNoExt || hasDcmExt;
+    return hasNoExt || hasDcmExt;
   }
 
   /**
