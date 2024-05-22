@@ -98,11 +98,8 @@ export class DicomDataLoader {
    * @param {object} file The file to check.
    * @returns {boolean} True if the file can be loaded.
    */
-  canLoadFile(file) {
-    const ext = getFileExtension(file.name);
-    const hasNoExt = ext === null;
-    const hasDcmExt = ext === "dcm" || ext === "dic";
-    return hasNoExt || hasDcmExt;
+  canLoadFile(_file) {
+    return true;
   }
 
   /**
@@ -154,17 +151,8 @@ export class DicomDataLoader {
    * @param {object} mem The memory object.
    * @returns {boolean} True if the object can be loaded.
    */
-  canLoadMemory(mem) {
-    if (
-      typeof mem["Content-Type"] !== "undefined" &&
-      mem["Content-Type"] === "application/dicom"
-    ) {
-      return true;
-    }
-    if (typeof mem.filename !== "undefined") {
-      return this.canLoadFile({ name: mem.filename });
-    }
-    return false;
+  canLoadMemory(_mem) {
+    return true;
   }
 
   /**
